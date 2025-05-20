@@ -6,8 +6,14 @@
   ],
   "scripts": {
     "mobile": "npm run start --workspace=mobile",
+    "mobile:start": "npm run start --workspace=mobile",
+    "mobile:ios": "npm run ios --workspace=mobile",
+    "mobile:android": "npm run android --workspace=mobile",
+    "mobile:lint": "npm run lint --workspace=mobile",
+    
     "backend:dev": "npm run dev --workspace=backend",
     "backend:start": "npm run start --workspace=backend",
-    "backend:build": "npm run build --workspace=backend"
+    "backend:build": "npm run build --workspace=backend",
+    "backend:lint": "npm run lint --workspace=backend"
   }
 }
