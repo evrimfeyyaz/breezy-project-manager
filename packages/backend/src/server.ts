@@ -1,6 +1,14 @@
 import cors from 'cors';
 import express, { Request, Response } from 'express';
-import { Project } from './types';
+import { v4 as uuidv4 } from 'uuid';
+import { CreateProjectPayload, Project, UpdateProjectPayload } from './types';
+
+const ALLOWED_STATUSES: Project['status'][] = ['backlog', 'todo', 'in-progress', 'completed'];
+const DEFAULT_STATUS: Project['status'] = 'backlog';
+
+const isValidStatus = (status: string): status is Project['status'] => {
+  return ALLOWED_STATUSES.includes(status.toLowerCase() as Project['status']);
+};
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -8,11 +16,92 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// In-memory database
 const projects: Project[] = [];
 
 // GET /projects endpoint
 app.get('/projects', (_req: Request, res: Response) => {
-  res.json(projects);
+  const nonDeletedProjects = projects.filter(project => !project.deletedAt);
+  res.json(nonDeletedProjects);
+});
+
+// POST /projects endpoint
+app.post('/projects', (req, res) => {
+  const { name, assignee, status: rawStatus } = req.body as CreateProjectPayload;
+
+  if (!name) {
+    res.status(400).json({ message: 'Project name is required.' });
+    return;
+  }
+
+  let status: Project['status'] = DEFAULT_STATUS;
+
+  if (rawStatus && isValidStatus(rawStatus)) {
+    status = rawStatus.toLowerCase() as Project['status'];
+  } else if (rawStatus) {
+    console.warn(`Invalid status provided: ${rawStatus}. Defaulting to '${DEFAULT_STATUS}'.`);
+  }
+
+  const newProject: Project = {
+    id: uuidv4(),
+    name,
+    status,
+    assignee,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  projects.push(newProject);
+  res.status(201).json(newProject);
+});
+
+// PUT /projects/:id endpoint
+app.put('/projects/:id', (req, res) => {
+  const { id } = req.params;
+  const { name, assignee, status: rawStatus } = req.body as UpdateProjectPayload;
+
+  const projectIndex = projects.findIndex(p => p.id === id);
+
+  if (projectIndex === -1) {
+    res.status(404).json({ message: 'Project not found.' });
+    return;
+  }
+
+  const originalProject = projects[projectIndex];
+  let newStatus = originalProject.status;
+
+  if (rawStatus && isValidStatus(rawStatus)) {
+    newStatus = rawStatus.toLowerCase() as Project['status'];
+  } else if (rawStatus) {
+    console.warn(`Invalid status provided for update: ${rawStatus}. Status not changed.`);
+  }
+
+  const shouldRemoveAssignee = assignee === null;
+
+  const updatedProject: Project = {
+    ...originalProject,
+    name: name ?? originalProject.name,
+    assignee: shouldRemoveAssignee ? undefined : (assignee ?? originalProject.assignee),
+    status: newStatus,
+    updatedAt: new Date().toISOString(),
+  };
+
+  projects[projectIndex] = updatedProject;
+  res.status(200).json(updatedProject);
+});
+
+// DELETE /projects/:id endpoint
+app.delete('/projects/:id', (req, res) => {
+  const { id } = req.params;
+  const projectIndex = projects.findIndex(p => p.id === id);
+
+  if (projectIndex === -1) {
+    res.status(404).json({ message: 'Project not found.' });
+    return;
+  }
+
+  projects[projectIndex].deletedAt = new Date().toISOString();
+  res.status(200).json(projects[projectIndex]);
 });
 
 app.listen(port, () => {

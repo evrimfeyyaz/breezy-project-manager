@@ -6,6 +6,8 @@
   ],
   "scripts": {
     "mobile": "npm run start --workspace=mobile",
-    "backend": "npm run dev --workspace=backend"
+    "backend:dev": "npm run dev --workspace=backend",
+    "backend:start": "npm run start --workspace=backend",
+    "backend:build": "npm run build --workspace=backend"
   }
 }
