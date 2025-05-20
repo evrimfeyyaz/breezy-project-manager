@@ -4,7 +4,7 @@ export interface Project {
   /** The name of the project */
   name: string;
   /** The status of the project */
-  status: 'backlog' | 'todo' | 'in-progress' | 'completed';
+  status: "backlog" | "todo" | "in-progress" | "completed";
   /** The name of the person assigned to the project */
   assignee?: string;
   /** The date and time the project was created in ISO 8601 format */
@@ -22,7 +22,7 @@ export interface CreateProjectPayload {
   assignee?: string;
   /** The status of the project */
   status?: string;
-} 
+}
 
 export interface UpdateProjectPayload {
   /** The updated name of the project, leave blank to keep the original name */
@@ -31,4 +31,4 @@ export interface UpdateProjectPayload {
   assignee?: string | null;
   /** The updated status of the project, leave blank to keep the original status */
   status?: string;
-} 
+}
