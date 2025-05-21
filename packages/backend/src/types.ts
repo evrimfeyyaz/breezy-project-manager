@@ -11,8 +11,6 @@ export interface Project {
   createdAt: string;
   /** The date and time the project was last updated in ISO 8601 format */
   updatedAt: string;
-  /** The date and time the project was soft-deleted in ISO 8601 format */
-  deletedAt?: string;
 }
 
 export interface CreateProjectPayload {

@@ -1,6 +1,7 @@
 import cors from "cors";
 import express, { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
+import { initialProjects } from "./initial-data";
 import { CreateProjectPayload, Project, UpdateProjectPayload } from "./types";
 
 const ALLOWED_STATUSES: Project["status"][] = [
@@ -15,6 +16,11 @@ const isValidStatus = (status: string): status is Project["status"] => {
   return ALLOWED_STATUSES.includes(status.toLowerCase() as Project["status"]);
 };
 
+const printInfo = (message: string, data: unknown) => {
+  console.log(message);
+  console.log(JSON.stringify(data, null, 2));
+};
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -22,16 +28,19 @@ app.use(cors());
 app.use(express.json());
 
 // In-memory database
-const projects: Project[] = [];
+const projects: Project[] = [...initialProjects];
 
 // GET /projects endpoint
 app.get("/projects", (_req: Request, res: Response) => {
-  const nonDeletedProjects = projects.filter((project) => !project.deletedAt);
-  res.json(nonDeletedProjects);
+  printInfo("GET /projects", projects);
+
+  res.json(projects);
 });
 
 // POST /projects endpoint
 app.post("/projects", (req, res) => {
+  printInfo("POST /projects", req.body);
+
   const {
     name,
     assignee,
@@ -68,6 +77,8 @@ app.post("/projects", (req, res) => {
 
 // PUT /projects/:id endpoint
 app.put("/projects/:id", (req, res) => {
+  printInfo("PUT /projects/:id", req.body);
+
   const { id } = req.params;
   const {
     name,
@@ -107,20 +118,6 @@ app.put("/projects/:id", (req, res) => {
 
   projects[projectIndex] = updatedProject;
   res.status(200).json(updatedProject);
-});
-
-// DELETE /projects/:id endpoint
-app.delete("/projects/:id", (req, res) => {
-  const { id } = req.params;
-  const projectIndex = projects.findIndex((p) => p.id === id);
-
-  if (projectIndex === -1) {
-    res.status(404).json({ message: "Project not found." });
-    return;
-  }
-
-  projects[projectIndex].deletedAt = new Date().toISOString();
-  res.status(200).json(projects[projectIndex]);
 });
 
 app.listen(port, () => {
