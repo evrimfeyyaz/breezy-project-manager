@@ -7,7 +7,7 @@ import { projects$ } from "../../state/projectsState";
 import { Project } from "../../types";
 
 const ProjectListScreen = () => {
-  const projects = use$(() => Object.values(projects$.get()));
+  const projects = use$(() => projects$.peek() && Object.values(projects$.get()));
 
   const renderItem = useCallback(
     ({ item }: { item: Project }) => <ProjectListItem item={item} />,
