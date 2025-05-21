@@ -1,50 +1,51 @@
-import { use$ } from "@legendapp/state/react"; // Import useObservable
-import { Stack, useLocalSearchParams } from "expo-router";
-import React from "react";
-import { ActivityIndicator, Button, StyleSheet, Text, View } from "react-native";
-import { projects$ } from "../../state/projectsState"; // Import projects$
+import { use$ } from "@legendapp/state/react";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import React, { useEffect } from "react";
+import { Button, StyleSheet, Text, View } from "react-native";
+import LoadingIndicator from "../../components/common/LoadingIndicator";
+import ProjectDetails from "../../components/projects/ProjectDetails";
+import { projects$ } from "../../state/projectsState";
 
 export default function ProjectDetailsPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const project = use$(() => projects$[id].get());
+  const navigation = useNavigation();
+
+  const renderHeaderRight = () => (
+    <Button
+      onPress={() => {
+        /* TODO: Implement edit functionality */
+      }}
+      title="Edit"
+    />
+  );
+
+  useEffect(() => {
+    if (!project) {
+      return;
+    }
+
+    navigation.setOptions({
+      title: project.name,
+      headerRight: renderHeaderRight,
+    });
+  }, [project, navigation]);
 
   if (!project && projects$.isLoading.get()) {
+    return <LoadingIndicator text="Loading project details..." />;
+  }
+
+  if (!project) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" />
-        <Text>Loading project details...</Text>
+        <Text>Project not found or ID is missing.</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Stack.Screen
-        options={{
-          title: project ? project.name : "Project Details",
-          headerRight: () => (
-            <Button
-              onPress={() => {
-                /* TODO: Implement edit functionality */
-              }}
-              title="Edit"
-            />
-          ),
-        }}
-      />
-      {project ? (
-        <>
-          <Text style={styles.title}>{project.name}</Text>
-          <Text style={styles.label}>ID:</Text>
-          <Text style={styles.value}>{project.id}</Text>
-          <Text style={styles.label}>Assignee:</Text>
-          <Text style={styles.value}>{project.assignee}</Text>
-          <Text style={styles.label}>Status:</Text>
-          <Text style={styles.value}>{project.status}</Text>
-        </>
-      ) : (
-        <Text>Project not found or ID is missing.</Text>
-      )}
+      <ProjectDetails project={project} />
     </View>
   );
 }
@@ -61,19 +62,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 16,
     backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 8,
-  },
-  value: {
-    fontSize: 16,
-    marginBottom: 8,
   },
 });
