@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   text: {
-    marginTop: 8, // Added some margin for spacing
-    fontSize: 16, // Default font size
+    marginTop: 8,
+    fontSize: 16,
   },
 });
