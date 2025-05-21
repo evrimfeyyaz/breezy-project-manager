@@ -1,6 +1,6 @@
 import { use$ } from "@legendapp/state/react";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Button, StyleSheet, View } from "react-native";
 import LoadingIndicator from "../../components/common/LoadingIndicator";
 import ProjectDetails from "../../components/projects/ProjectDetails";
@@ -12,30 +12,29 @@ export default function ProjectDetailsPage() {
   const project = use$(() => projects$[id].get());
   const navigation = useNavigation();
 
-  const renderHeaderRight = () => (
-    <Button
-      onPress={() => {
-        router.push({
-          pathname: "/projects/edit",
-          params: { id },
-        });
-      }}
-      title="Edit"
-    />
+  const renderHeaderRight = useCallback(
+    () => (
+      <Button
+        onPress={() => {
+          router.push({
+            pathname: "/projects/edit",
+            params: { id },
+          });
+        }}
+        title="Edit"
+      />
+    ),
+    [id],
   );
 
   useEffect(
-    function updateHeader() {
-      if (!project) {
-        return;
-      }
-
+    function setHeader() {
       navigation.setOptions({
         title: project.name,
         headerRight: renderHeaderRight,
       });
     },
-    [project, navigation],
+    [navigation, project.name, renderHeaderRight],
   );
 
   if (!project && projects$.isLoading.get()) {
