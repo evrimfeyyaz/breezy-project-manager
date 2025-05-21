@@ -1,5 +1,5 @@
 import { use$ } from "@legendapp/state/react";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect } from "react";
 import { Button, StyleSheet, View } from "react-native";
 import LoadingIndicator from "../../components/common/LoadingIndicator";
@@ -15,7 +15,10 @@ export default function ProjectDetailsPage() {
   const renderHeaderRight = () => (
     <Button
       onPress={() => {
-        /* TODO: Implement edit functionality */
+        router.push({
+          pathname: "/projects/edit",
+          params: { id },
+        });
       }}
       title="Edit"
     />
