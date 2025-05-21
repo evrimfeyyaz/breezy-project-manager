@@ -22,9 +22,11 @@ export default function EditProjectScreen() {
       return;
     }
 
+    const shouldRemoveAssignee = project.assignee && !data.assignee;
+
     const updatedProjectData: Partial<Project> = {
       name: data.name,
-      assignee: data.assignee,
+      assignee: shouldRemoveAssignee ? null : data.assignee,
       status: data.status,
     };
 

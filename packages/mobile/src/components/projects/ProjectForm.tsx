@@ -35,7 +35,7 @@ export default function ProjectForm({
   submitButtonText = "Save Project",
 }: ProjectFormProps) {
   const [name, setName] = useState(initialData?.name || "");
-  const [assignee, setAssignee] = useState<string | undefined>(initialData?.assignee);
+  const [assignee, setAssignee] = useState<string | undefined | null>(initialData?.assignee);
   const [status, setStatus] = useState<ProjectStatus | undefined>(initialData?.status || "backlog");
 
   useEffect(() => {

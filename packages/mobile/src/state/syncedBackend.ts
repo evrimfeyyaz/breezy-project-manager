@@ -17,6 +17,5 @@ export const syncedBackend = configureSynced(syncedCrud, {
   },
   fieldCreatedAt: "createdAt",
   fieldUpdatedAt: "updatedAt",
-  changesSince: "last-sync",
-  mode: "assign",
+  mode: "set",
 });
