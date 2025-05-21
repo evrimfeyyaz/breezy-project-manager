@@ -3,8 +3,8 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
-import { projects$ } from "../state/projectsState";
-import { Project, ProjectStatus } from "../types";
+import { projects$ } from "../../state/projectsState";
+import { Project, ProjectStatus } from "../../types";
 
 export default function CreateProjectScreen() {
   const [name, setName] = useState("");
