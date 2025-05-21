@@ -6,6 +6,7 @@ export default function ProjectsLayout() {
       <Stack.Screen name="index" options={{ title: "Projects" }} />
       <Stack.Screen name="[id]" options={{ title: "Project Details" }} />
       <Stack.Screen name="create" options={{ title: "Create Project" }} />
+      <Stack.Screen name="edit" options={{ title: "Edit Project" }} />
     </Stack>
   );
 }
