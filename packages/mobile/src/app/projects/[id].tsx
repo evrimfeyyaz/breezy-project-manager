@@ -1,9 +1,10 @@
 import { use$ } from "@legendapp/state/react";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, View } from "react-native";
 import LoadingIndicator from "../../components/common/LoadingIndicator";
 import ProjectDetails from "../../components/projects/ProjectDetails";
+import ProjectNotFound from "../../components/projects/ProjectNotFound";
 import { projects$ } from "../../state/projectsState";
 
 export default function ProjectDetailsPage() {
@@ -20,27 +21,26 @@ export default function ProjectDetailsPage() {
     />
   );
 
-  useEffect(() => {
-    if (!project) {
-      return;
-    }
+  useEffect(
+    function updateHeader() {
+      if (!project) {
+        return;
+      }
 
-    navigation.setOptions({
-      title: project.name,
-      headerRight: renderHeaderRight,
-    });
-  }, [project, navigation]);
+      navigation.setOptions({
+        title: project.name,
+        headerRight: renderHeaderRight,
+      });
+    },
+    [project, navigation],
+  );
 
   if (!project && projects$.isLoading.get()) {
     return <LoadingIndicator text="Loading project details..." />;
   }
 
   if (!project) {
-    return (
-      <View style={styles.centered}>
-        <Text>Project not found or ID is missing.</Text>
-      </View>
-    );
+    return <ProjectNotFound />;
   }
 
   return (
@@ -53,13 +53,6 @@ export default function ProjectDetailsPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: "#fff",
-  },
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     padding: 16,
     backgroundColor: "#fff",
   },
