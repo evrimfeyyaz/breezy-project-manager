@@ -13,7 +13,7 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
       <Text style={styles.label}>ID:</Text>
       <Text style={styles.value}>{project.id}</Text>
       <Text style={styles.label}>Assignee:</Text>
-      <Text style={styles.value}>{project.assignee}</Text>
+      <Text style={styles.value}>{project.assignee ?? "Not assigned"}</Text>
       <Text style={styles.label}>Status:</Text>
       <Text style={styles.value}>{project.status}</Text>
     </>
