@@ -7,7 +7,7 @@ const statusItems: { label: string; value: ProjectStatus }[] = [
   { label: "Backlog", value: "backlog" },
   { label: "To Do", value: "todo" },
   { label: "In Progress", value: "in-progress" },
-  { label: "Done", value: "completed" },
+  { label: "Completed", value: "completed" },
 ];
 
 const assigneeItems = [
