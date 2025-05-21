@@ -11,19 +11,18 @@ app.use(cors());
 app.use(express.json());
 
 let projects: Project[] = [];
-let operationLogs: string[] = [];
+const operationLogs: string[] = [];
 
 // Load initial data
 const initialData = loadData();
 projects = initialData.loadedProjects;
-operationLogs = initialData.loadedOperationLogs;
 
 // Initial log and save
 const initialMessage = "Server started";
 if (!operationLogs.includes(initialMessage)) {
   operationLogs.push(initialMessage);
 }
-saveData(projects, operationLogs);
+saveData(projects);
 printInfo(projects, operationLogs, initialMessage);
 
 // GET /projects endpoint
@@ -69,7 +68,7 @@ app.post("/projects", (req, res) => {
   projects.push(newProject);
   const message = `POST /projects: Added project "${newProject.name}" (ID: ${newProject.id})`;
   operationLogs.push(message);
-  saveData(projects, operationLogs);
+  saveData(projects);
   printInfo(projects, operationLogs, message);
   res.status(201).json(newProject);
 });
@@ -114,7 +113,7 @@ app.put("/projects/:id", (req, res) => {
   projects[projectIndex] = updatedProject;
   const message = `PUT /projects/:id: Updated project "${updatedProject.name}" (ID: ${updatedProject.id})`;
   operationLogs.push(message);
-  saveData(projects, operationLogs);
+  saveData(projects);
   printInfo(projects, operationLogs, message);
   res.status(200).json(updatedProject);
 });

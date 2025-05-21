@@ -4,12 +4,6 @@ import { testData } from "./test-data";
 import { ALLOWED_STATUSES, Project, ProjectStatus } from "./types";
 
 const PROJECTS_DATA_PATH = path.join(__dirname, "..", "data", "projects.json");
-const OPERATIONS_LOG_PATH = path.join(
-  __dirname,
-  "..",
-  "data",
-  "operations.txt",
-);
 
 /**
  * Prints the current state of the projects data and the operation log.
@@ -41,15 +35,13 @@ export const isValidStatus = (status: string): status is ProjectStatus => {
 };
 
 /**
- * Loads the projects data and the operation logs from the file system.
- * @returns The projects data and the operation logs.
+ * Loads the projects data from the file system.
+ * @returns The projects data.
  */
 export const loadData = (): {
   loadedProjects: Project[];
-  loadedOperationLogs: string[];
 } => {
   let loadedProjects: Project[] = [];
-  let loadedOperationLogs: string[] = [];
 
   try {
     if (!fs.existsSync(PROJECTS_DATA_PATH)) {
@@ -65,39 +57,19 @@ export const loadData = (): {
     loadedProjects = testData;
   }
 
-  try {
-    if (!fs.existsSync(OPERATIONS_LOG_PATH)) {
-      fs.writeFileSync(OPERATIONS_LOG_PATH, "");
-      loadedOperationLogs = [];
-      console.log("operations.log.txt created.");
-    } else {
-      const logsData = fs.readFileSync(OPERATIONS_LOG_PATH, "utf-8");
-      loadedOperationLogs = logsData
-        .split("\n")
-        .filter((log) => log.trim() !== "");
-    }
-  } catch (error) {
-    console.error("Error loading operation logs:", error);
-  }
-
-  return { loadedProjects, loadedOperationLogs };
+  return { loadedProjects };
 };
 
 /**
- * Saves the projects data and the operation logs to the file system.
+ * Saves the projects data to the file system.
  * @param projectsToSave The projects data to save.
- * @param logsToSave The operation logs to save.
  */
-export const saveData = (
-  projectsToSave: Project[],
-  logsToSave: string[],
-): void => {
+export const saveData = (projectsToSave: Project[]): void => {
   try {
     fs.writeFileSync(
       PROJECTS_DATA_PATH,
       JSON.stringify(projectsToSave, null, 2),
     );
-    fs.writeFileSync(OPERATIONS_LOG_PATH, logsToSave.join("\n"));
   } catch (error) {
     console.error("Error saving data:", error);
   }
