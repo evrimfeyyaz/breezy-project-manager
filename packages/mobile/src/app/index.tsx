@@ -1,4 +1,5 @@
 import { use$ } from "@legendapp/state/react";
+import { Link } from "expo-router";
 import React from "react";
 import { Button, FlatList, StyleSheet, Text, View } from "react-native";
 import { projects$ } from "../state/projectsState";
@@ -18,7 +19,9 @@ const ProjectListScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList data={projects} renderItem={renderItem} keyExtractor={(item) => item.id} />
-      <Button title="Create Project" onPress={() => console.log("Create Project pressed")} />
+      <Link href="/create" asChild>
+        <Button title="Create Project" />
+      </Link>
     </View>
   );
 };

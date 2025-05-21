@@ -1,4 +1,4 @@
-import { CreateProjectPayload, Project, UpdateProjectPayload } from "../types";
+import { Project, UpdateProjectPayload } from "../types";
 
 const API_BASE_URL = "http://localhost:3000";
 
@@ -22,7 +22,7 @@ export async function fetchProjects(): Promise<Project[]> {
  * @returns The created project.
  * @throws An error if the request fails.
  */
-export async function createProject(projectData: CreateProjectPayload): Promise<Project> {
+export async function createProject(projectData: Project): Promise<Project> {
   const response = await fetch(`${API_BASE_URL}/projects`, {
     method: "POST",
     headers: {

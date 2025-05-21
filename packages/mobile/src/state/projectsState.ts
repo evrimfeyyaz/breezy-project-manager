@@ -8,9 +8,12 @@ export const projects$ = observable(
     list: fetchProjects,
     create: async (projectData) => {
       return createProject({
+        id: projectData.id,
         name: projectData.name,
         assignee: projectData.assignee,
         status: projectData.status,
+        createdAt: null,
+        updatedAt: null,
       });
     },
     update: async (projectData) => {

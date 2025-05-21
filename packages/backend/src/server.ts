@@ -42,6 +42,7 @@ app.post("/projects", (req, res) => {
   printInfo("POST /projects", req.body);
 
   const {
+    id,
     name,
     assignee,
     status: rawStatus,
@@ -63,7 +64,7 @@ app.post("/projects", (req, res) => {
   }
 
   const newProject: Project = {
-    id: uuidv4(),
+    id: id ?? uuidv4(),
     name,
     status,
     assignee,

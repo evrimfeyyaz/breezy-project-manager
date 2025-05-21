@@ -14,6 +14,8 @@ export interface Project {
 }
 
 export interface CreateProjectPayload {
+  /** The unique identifier of the project */
+  id?: string;
   /** The name of the project */
   name?: string;
   /** The name of the person assigned to the project */
