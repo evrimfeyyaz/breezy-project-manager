@@ -50,3 +50,6 @@ Thumbs.db
 # Temporary files
 *.log
 *.tmp
+
+# Backend Data
+packages/backend/data

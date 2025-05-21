@@ -1,25 +1,8 @@
 import cors from "cors";
 import express, { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
-import { initialProjects } from "./initial-data";
 import { CreateProjectPayload, Project, UpdateProjectPayload } from "./types";
-
-const ALLOWED_STATUSES: Project["status"][] = [
-  "backlog",
-  "todo",
-  "in-progress",
-  "completed",
-];
-const DEFAULT_STATUS: Project["status"] = "backlog";
-
-const isValidStatus = (status: string): status is Project["status"] => {
-  return ALLOWED_STATUSES.includes(status.toLowerCase() as Project["status"]);
-};
-
-const printInfo = (message: string, data: unknown) => {
-  console.log(message);
-  console.log(JSON.stringify(data, null, 2));
-};
+import { isValidStatus, loadData, printInfo, saveData } from "./utils";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -27,22 +10,34 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// In-memory database
-const projects: Project[] = [...initialProjects];
+let projects: Project[] = [];
+let operationLogs: string[] = [];
+
+// Load initial data
+const initialData = loadData();
+projects = initialData.loadedProjects;
+operationLogs = initialData.loadedOperationLogs;
+
+// Initial log and save
+const initialMessage = "Server started";
+if (!operationLogs.includes(initialMessage)) {
+  operationLogs.push(initialMessage);
+}
+saveData(projects, operationLogs);
+printInfo(projects, operationLogs, initialMessage);
 
 // GET /projects endpoint
 app.get("/projects", (_req: Request, res: Response) => {
-  printInfo("GET /projects", projects);
-
+  const message = "GET /projects: Displaying all projects";
+  printInfo(projects, operationLogs, message);
   res.json(projects);
 });
 
+const DEFAULT_STATUS: Project["status"] = "backlog";
+
 // POST /projects endpoint
 app.post("/projects", (req, res) => {
-  printInfo("POST /projects", req.body);
-
   const {
-    id,
     name,
     assignee,
     status: rawStatus,
@@ -54,7 +49,6 @@ app.post("/projects", (req, res) => {
   }
 
   let status: Project["status"] = DEFAULT_STATUS;
-
   if (rawStatus && isValidStatus(rawStatus)) {
     status = rawStatus.toLowerCase() as Project["status"];
   } else if (rawStatus) {
@@ -64,7 +58,7 @@ app.post("/projects", (req, res) => {
   }
 
   const newProject: Project = {
-    id: id ?? uuidv4(),
+    id: uuidv4(),
     name,
     status,
     assignee,
@@ -73,20 +67,21 @@ app.post("/projects", (req, res) => {
   };
 
   projects.push(newProject);
+  const message = `POST /projects: Added project "${newProject.name}" (ID: ${newProject.id})`;
+  operationLogs.push(message);
+  saveData(projects, operationLogs);
+  printInfo(projects, operationLogs, message);
   res.status(201).json(newProject);
 });
 
 // PUT /projects/:id endpoint
 app.put("/projects/:id", (req, res) => {
-  printInfo("PUT /projects/:id", req.body);
-
   const { id } = req.params;
   const {
     name,
     assignee,
     status: rawStatus,
   } = req.body as UpdateProjectPayload;
-
   const projectIndex = projects.findIndex((p) => p.id === id);
 
   if (projectIndex === -1) {
@@ -106,7 +101,6 @@ app.put("/projects/:id", (req, res) => {
   }
 
   const shouldRemoveAssignee = assignee === null;
-
   const updatedProject: Project = {
     ...originalProject,
     name: name ?? originalProject.name,
@@ -118,6 +112,10 @@ app.put("/projects/:id", (req, res) => {
   };
 
   projects[projectIndex] = updatedProject;
+  const message = `PUT /projects/:id: Updated project "${updatedProject.name}" (ID: ${updatedProject.id})`;
+  operationLogs.push(message);
+  saveData(projects, operationLogs);
+  printInfo(projects, operationLogs, message);
   res.status(200).json(updatedProject);
 });
 

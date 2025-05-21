@@ -1,10 +1,19 @@
+export const ALLOWED_STATUSES = [
+  "backlog",
+  "todo",
+  "in-progress",
+  "completed",
+] as const;
+
+export type ProjectStatus = (typeof ALLOWED_STATUSES)[number];
+
 export interface Project {
   /** The unique identifier of the project */
   id: string;
   /** The name of the project */
   name: string;
   /** The status of the project */
-  status: "backlog" | "todo" | "in-progress" | "completed";
+  status: ProjectStatus;
   /** The name of the person assigned to the project */
   assignee?: string;
   /** The date and time the project was created in ISO 8601 format */
