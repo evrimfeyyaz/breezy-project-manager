@@ -1,7 +1,7 @@
 import { use$ } from "@legendapp/state/react";
 import { Link } from "expo-router";
 import React from "react";
-import { Button, FlatList, StyleSheet, Text, View } from "react-native";
+import { Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { projects$ } from "../state/projectsState";
 import { Project } from "../types";
 
@@ -9,11 +9,15 @@ const ProjectListScreen = () => {
   const projects = use$(() => Object.values(projects$.get()));
 
   const renderItem = ({ item }: { item: Project }) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>
-        {item.name} - {item.status}
-      </Text>
-    </View>
+    <Link href={`/projects/${item.id}`} asChild>
+      <TouchableOpacity>
+        <View style={styles.itemContainer}>
+          <Text style={styles.itemText}>
+            {item.name} - {item.status}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </Link>
   );
 
   return (
