@@ -1,26 +1,19 @@
-import { observable, Observable } from "@legendapp/state";
-import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
-import {
-  createProject,
-  deleteProject,
-  fetchProjects,
-  updateProject,
-} from "../services/projectApiService";
-import { CreateProjectPayload, Project, UpdateProjectPayload } from "../types";
+import { observable } from "@legendapp/state";
+import { createProject, fetchProjects, updateProject } from "../services/projectApiService";
+import { Project } from "../types";
+import { syncedBackend } from "./syncedBackend";
 
-export type ProjectsState = Record<string, Project>;
-
-export const projects$: Observable<ProjectsState> = observable(
-  syncedCrud<Project>({
+export const projects$ = observable(
+  syncedBackend<Project>({
     list: fetchProjects,
-    create: async (projectData: CreateProjectPayload) => {
+    create: async (projectData) => {
       return createProject({
         name: projectData.name,
         assignee: projectData.assignee,
         status: projectData.status,
       });
     },
-    update: async (projectData: UpdateProjectPayload) => {
+    update: async (projectData) => {
       return updateProject({
         id: projectData.id,
         name: projectData.name,
@@ -28,12 +21,5 @@ export const projects$: Observable<ProjectsState> = observable(
         status: projectData.status,
       });
     },
-    delete: async (item: { id: string }) => {
-      return deleteProject(item.id);
-    },
-    persist: {
-      name: "projects",
-    },
-    mode: "assign",
   }),
 );
