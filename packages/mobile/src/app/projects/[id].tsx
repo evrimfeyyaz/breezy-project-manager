@@ -6,7 +6,7 @@ import { Button, StyleSheet, View } from "react-native";
 import LoadingIndicator from "../../components/common/LoadingIndicator";
 import ProjectDetails from "../../components/projects/ProjectDetails";
 import ProjectNotFound from "../../components/projects/ProjectNotFound";
-import { projects$ } from "../../state/projectsState";
+import { projects$ } from "../../state/projects-state";
 
 export default function ProjectDetailsPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -28,12 +28,9 @@ export default function ProjectDetailsPage() {
     [id],
   );
 
-  useEffect(
-    function syncWithBackend() {
-      syncState(projects$).sync();
-    },
-    [id],
-  );
+  useEffect(function syncWithBackend() {
+    syncState(projects$).sync();
+  });
 
   useEffect(
     function setHeader() {

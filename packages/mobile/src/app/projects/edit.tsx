@@ -4,7 +4,7 @@ import React from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import LoadingIndicator from "../../components/common/LoadingIndicator";
 import ProjectForm from "../../components/projects/ProjectForm";
-import { projects$ } from "../../state/projectsState";
+import { projects$ } from "../../state/projects-state";
 import { Project } from "../../types";
 
 export default function EditProjectScreen() {

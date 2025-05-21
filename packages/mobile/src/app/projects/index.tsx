@@ -4,7 +4,7 @@ import { Link } from "expo-router";
 import React, { useCallback, useEffect } from "react";
 import { Button, FlatList, StyleSheet, View } from "react-native";
 import ProjectListItem from "../../components/projects/ProjectListItem";
-import { projects$ } from "../../state/projectsState";
+import { projects$ } from "../../state/projects-state";
 import { Project } from "../../types";
 
 const ProjectListScreen = () => {

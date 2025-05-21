@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import React from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import ProjectForm from "../../components/projects/ProjectForm";
-import { projects$ } from "../../state/projectsState";
+import { projects$ } from "../../state/projects-state";
 import { Project } from "../../types";
 
 export default function CreateProjectScreen() {

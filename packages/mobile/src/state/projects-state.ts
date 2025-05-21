@@ -1,5 +1,5 @@
 import { observable } from "@legendapp/state";
-import { createProject, fetchProjects, updateProject } from "../services/projectApiService";
+import { createProject, fetchProjects, updateProject } from "../services/projects-service";
 import { Project } from "../types";
 import { syncedBackend } from "./syncedBackend";
 

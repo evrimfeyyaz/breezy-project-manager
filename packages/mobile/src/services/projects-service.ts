@@ -1,7 +1,9 @@
 import { Platform } from "react-native";
 import { Project } from "../types";
 
-const API_BASE_URL = Platform.OS === "ios" ? "http://localhost:3000" : "http://10.0.2.2:3000";
+export const API_BASE_URL =
+  Platform.OS === "ios" ? "http://localhost:3000" : "http://10.0.2.2:3000";
+// export const API_BASE_URL = "http://172.20.10.2:3000"; // Replace this with your computer's local IP address if you'd like to test on a real device.
 
 /**
  * Fetches all projects from the API.
