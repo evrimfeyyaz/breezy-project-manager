@@ -24,5 +24,6 @@ export const projects$ = observable(
         status: projectData.status,
       });
     },
+    onSaved: ({ saved }) => ({ updatedAt: saved.updatedAt }),
   }),
 );

@@ -1,6 +1,7 @@
+import { syncState } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 import { Link } from "expo-router";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Button, FlatList, StyleSheet, View } from "react-native";
 import ProjectListItem from "../../components/projects/ProjectListItem";
 import { projects$ } from "../../state/projectsState";
@@ -13,6 +14,10 @@ const ProjectListScreen = () => {
     ({ item }: { item: Project }) => <ProjectListItem item={item} />,
     [],
   );
+
+  useEffect(function syncWithBackend() {
+    syncState(projects$).sync();
+  });
 
   return (
     <View style={styles.container}>

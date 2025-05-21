@@ -1,3 +1,4 @@
+import { syncState } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useCallback, useEffect } from "react";
@@ -24,6 +25,13 @@ export default function ProjectDetailsPage() {
         title="Edit"
       />
     ),
+    [id],
+  );
+
+  useEffect(
+    function syncWithBackend() {
+      syncState(projects$).sync();
+    },
     [id],
   );
 
