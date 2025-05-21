@@ -1,4 +1,4 @@
-import { Project, UpdateProjectPayload } from "../types";
+import { Project } from "../types";
 
 const API_BASE_URL = "http://localhost:3000";
 
@@ -44,7 +44,7 @@ export async function createProject(projectData: Project): Promise<Project> {
  * @throws An error if the request fails.
  * @throws An error if the project ID is not provided.
  */
-export async function updateProject(projectData: UpdateProjectPayload): Promise<Project> {
+export async function updateProject(projectData: Partial<Project>): Promise<Project> {
   if (!projectData.id) {
     throw new Error("Project ID is required for update");
   }
@@ -60,21 +60,5 @@ export async function updateProject(projectData: UpdateProjectPayload): Promise<
     throw new Error(`Failed to update project: ${response.statusText}`);
   }
 
-  return response.json() as Promise<Project>;
-}
-
-/**
- * Deletes a project.
- * @param id The ID of the project to delete.
- * @returns The deleted project.
- * @throws An error if the request fails.
- */
-export async function deleteProject(id: string): Promise<Project> {
-  const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
-    method: "DELETE",
-  });
-  if (!response.ok) {
-    throw new Error(`Failed to delete project: ${response.statusText}`);
-  }
   return response.json() as Promise<Project>;
 }
